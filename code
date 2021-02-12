@@ -1,0 +1,97 @@
+import pandas as pd
+import sys
+
+CITY_DATA = { 'Chicago': 'chicago.csv',
+              'New York': 'new_york_city.csv',
+              'Washington': 'washington.csv' }
+
+def load_data(city, month, day):
+
+    # load data file into a dataframe
+    df = pd.read_csv(CITY_DATA[city])
+
+    # convert the Start Time column to datetime
+    df['Start Time'] = pd.to_datetime(df['Start Time'])
+
+    # extract month and day of week from Start Time to create new columns
+    df['month'] = df['Start Time'].dt.month
+    df['day_of_week'] = df['Start Time'].dt.day_name()
+
+    # filter by month if applicable
+    if month != 'all':
+        # use the index of the months list to get the corresponding int
+        months = ['january', 'february', 'march', 'april', 'may', 'june']
+        month = months.index(month) + 1
+
+        # filter by month to create the new dataframe
+        df = df[df['month'] == month]
+
+    # filter by day of week if applicable
+    if day != 'all':
+        # filter by day of week to create the new dataframe
+        df = df[df['day_of_week'] == day.title()]
+
+    return df
+print("Hello let's explore some data \n Would you like to start ? \n Y for yes N for no" )
+Y_or_N=input()
+if Y_or_N =='Y' or Y_or_N == 'N':
+       if Y_or_N =='Y':
+           print('Would you like to see data for Chicago, New York, or Washington?')
+           city=input()
+           if city =='Chicago' or  city =='New York' or  city =='Washington':
+               print('Would you like to filter the data by month, day,or not at all?')
+               ans=input()
+               if ans=='month' or ans == 'day' or ans =='not at all':
+                   if ans == 'month' or ans == 'day':
+                       if ans =='month': 
+                           print(' Which month - January, February, March, April, May, or June?')
+                           montht=input()
+                           if montht =='January' or montht=='February'or montht=='March'or montht=='April'or montht=='May'or montht=='June':
+                               month=montht
+                               day='all'
+                           else:
+                               print("wrong answare plz restart and enter a valid name")
+                               sys.exit() 
+                       elif ans=='day':
+                           print('Which day - Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, or Sunday?')
+                           dayt=input()
+                           if dayt=='Monday' or dayt=='Tuesday'or dayt=='Wednesday'or dayt=='Thursday'or dayt=='Friday'or dayt=='Saturday' or dayt=='Sunday':
+                               day=dayt
+                               month='all'
+                           else:
+                              print("wrong answare plz restart and enter a valid name")
+                              sys.exit() 
+                   else:
+                       month='all'
+                       day='all'
+               else:
+                   print("wrong answare plz restart and enter a valid name")
+                   sys.exit()
+               
+           else:
+               print("wrong answare plz restart and enter a valid name")
+               sys.exit()
+       else:
+           print('thanks .. bye')
+           sys.exit()
+else:
+    print("wrong answare remember it's a capital letter")
+    sys.exit()
+df = load_data(city, month, day)   
+print(df)
+print()
+print('would you like an additional informations?\n Y for yes and N for no')
+additional_cond=input()
+if additional_cond=='Y':
+    df['hour']=df['Start Time'].dt.hour
+    most_popular_hour=df['hour'].mode()[0]
+    user_type=df['User Type'].value_counts()
+    most_popular_usre_type=df['User Type'].mode()[0]
+    mean_time_duration=df['Trip Duration'].mean()
+    most_popular_Start_Station=df['Start Station'].mode()[0]
+    most_popular_End_Station=df['End Station'].mode()[0]
+    most_popular_gender=df['Gender'].mode()[0]
+    print('most popular hour: \n {} \n\n user types:\n {} \n\n most popular user type:\n {} \n\n mean time duration:\n {} \n\n most popular start station:\n {} \n\n most popular end station: \n {} \n\n most popular gender: \n {}'.format(most_popular_hour , user_type , most_popular_usre_type , mean_time_duration , most_popular_Start_Station , most_popular_End_Station , most_popular_gender))
+else:
+    print('ok..thanks :)')        
+  
