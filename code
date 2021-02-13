@@ -129,5 +129,5 @@ while display_ans=='Y':
     print(df.iloc[counter_start:counter_end])
     print("the next five rows??")
     display_ans=input().upper()
-    counter_start=counter_start+5
-    counter_end=counter_end+5
+    counter_start+=5
+    counter_end+=5
